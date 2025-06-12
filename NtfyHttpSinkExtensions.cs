@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Headers;
 using System.Text;
+using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Configuration;
 using Serilog.Events;
@@ -33,4 +34,15 @@ public static class NtfyHttpSinkExtensions
             batchFormatter: new NtfyBatchFormatter(ntfyTopic, ntfyTitle, ntfyTags),
             restrictedToMinimumLevel: restrictedToMinimumLevel);
     }
+
+    public static void NtfyHttp(
+        this LoggerSinkConfiguration loggerConfiguration,
+        IConfiguration configuration)
+      {
+        var section = configuration.GetSection("Logging:Ntfy");
+        if (!section.Exists()) return;
+        var ntfySettings = section.Get<NtfySettings>();
+        if (ntfySettings == null) return;
+        loggerConfiguration.NtfyHttp(ntfySettings.Endpoint, ntfySettings.Username, ntfySettings.Password, ntfySettings.Topic, ntfySettings.Title, ntfySettings.Tags, ntfySettings.MinimumLevel);
+      }
 }
