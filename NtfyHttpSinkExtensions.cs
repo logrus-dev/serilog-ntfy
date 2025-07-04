@@ -18,7 +18,8 @@ public static class NtfyHttpSinkExtensions
         string ntfyTopic,
         string ntfyTitle,
         string[] ntfyTags,
-        LogEventLevel restrictedToMinimumLevel
+        LogEventLevel restrictedToMinimumLevel,
+        int maxLength = 5000
         )
     {
         var authenticationString = $"{ntfyUsername}:{ntfyPassword}";
@@ -31,7 +32,7 @@ public static class NtfyHttpSinkExtensions
             httpClient: new JsonHttpClient(httpClient),
             queueLimitBytes: null,
             textFormatter: new NtfyLogFormatter(),
-            batchFormatter: new NtfyBatchFormatter(ntfyTopic, ntfyTitle, ntfyTags),
+            batchFormatter: new NtfyBatchFormatter(ntfyTopic, ntfyTitle, ntfyTags, maxLength),
             restrictedToMinimumLevel: restrictedToMinimumLevel);
     }
 

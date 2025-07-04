@@ -3,14 +3,14 @@ using Serilog.Sinks.Http;
 
 namespace Logrus.Serilog.Ntfy;
 
-public class NtfyBatchFormatter(string topic, string title, string[] tags) : IBatchFormatter
+public class NtfyBatchFormatter(string topic, string title, string[] tags, int maxLength) : IBatchFormatter
 {
     public void Format(IEnumerable<string> logEvents, TextWriter output)
     {
         var entry = new
         {
             topic,
-            message = string.Join("\n", logEvents.Select(x => $"\u2757 {x}")),
+            message = string.Join("\n", logEvents.Select(x => $"\u2757 {x}")).Substring(0, maxLength),
             title,
             tags,
         };
