@@ -10,7 +10,11 @@ public class NtfyBatchFormatter(string topic, string title, string[] tags, int m
         var entry = new
         {
             topic,
-            message = string.Join("\n", logEvents.Select(x => $"\u2757 {x}")).Substring(0, maxLength),
+            message = string.Join("\n", logEvents.Select(x => $"\u2757 {x}")) switch
+            {
+                var msg when msg.Length <= maxLength => msg,
+                var msg => msg[..maxLength]
+            },
             title,
             tags,
         };
